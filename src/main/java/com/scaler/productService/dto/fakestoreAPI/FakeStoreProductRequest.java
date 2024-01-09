@@ -5,12 +5,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class FakeStoreProductResponse {
+public class FakeStoreProductRequest {
 
 	String title;
 	Double price;
 	String description;
 	String category;
 	String image;
-	Rating rating;
+
 }
