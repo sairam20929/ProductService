@@ -1,22 +1,17 @@
 package com.scaler.productService.service;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.ResponseExtractor;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import com.scaler.productService.dto.CreateProductRequestDTO;
 import com.scaler.productService.dto.fakestoreAPI.FakeStoreProductRequest;
 import com.scaler.productService.dto.fakestoreAPI.FakeStoreProductResponse;
+import com.scaler.productService.mapper.ProductMapper;
+import com.scaler.productService.model.Product;
+import com.scaler.productService.utility.HttpUtil;
 
 @Service
 public class ProductService implements IProductService {
@@ -28,48 +23,47 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public FakeStoreProductResponse getProductById(Long productId) {
+	public Product getProductById(Long productId) {
 
-		FakeStoreProductResponse forEntity = restTemplate.build()
+		FakeStoreProductResponse fakeStoreProductResponse = restTemplate.build()
 				.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductResponse.class, productId)
 				.getBody();
-		return forEntity;
+
+		return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
 	}
 
 	@Override
-	public List<FakeStoreProductResponse> getAllProducts() {
+	public List<Product> getAllProducts() {
 
-		FakeStoreProductResponse[] dto = restTemplate.build()
+		FakeStoreProductResponse[] fakeStoreProductResponses = restTemplate.build()
 				.getForEntity("https://fakestoreapi.com/products", FakeStoreProductResponse[].class).getBody();
 
-		return Arrays.asList(dto);
+		return ProductMapper.getProductListFromFakeStoreList(fakeStoreProductResponses);
 	}
 
 	@Override
-	public FakeStoreProductResponse patchProduct(Long productId, CreateProductRequestDTO dto) {
+	public Product patchProduct(Long productId, Product product) throws Exception {
+		
+		Product existingProduct = getProductById(productId);
+        if (Objects.isNull(existingProduct)) {
+            throw new Exception("Product does not exist");
+        }
 
-		FakeStoreProductRequest requestDTO = new FakeStoreProductRequest();
-		requestDTO.setCategory(dto.getCategory());
-		requestDTO.setPrice(dto.getPrice());
-		requestDTO.setImage(dto.getImageURL());
-		requestDTO.setTitle(dto.getProductName());
+		FakeStoreProductRequest fakeStoreProductRequest = new FakeStoreProductRequest();
+		fakeStoreProductRequest.setTitle(product.getTitle());
+		fakeStoreProductRequest.setPrice(product.getPrice());
+		fakeStoreProductRequest.setDescription(product.getDescription());
+		fakeStoreProductRequest.setCategory(product.getCategory());
+		fakeStoreProductRequest.setImage(product.getImage());
+		fakeStoreProductRequest.setRating(product.getRating());
 
-		ResponseEntity<FakeStoreProductResponse> response = requestForEntity(HttpMethod.PATCH,
-				"https://fakestoreapi.com/products/{id}", requestDTO, FakeStoreProductResponse.class, productId);
+		FakeStoreProductResponse fakeStoreProductResponse = HttpUtil
+				.requestForEntity(restTemplate, HttpMethod.PATCH, "https://fakestoreapi.com/products/{id}",
+						fakeStoreProductRequest, FakeStoreProductResponse.class, productId)
+				.getBody();
 
-		return response.getBody();
+		return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
 
-	}
-
-	private <T> ResponseEntity<T> requestForEntity(HttpMethod httpMethod, String url, @Nullable Object request,
-			Class<T> responseType, Object... uriVariables) throws RestClientException {
-
-		RestTemplate t = restTemplate.requestFactory(HttpComponentsClientHttpRequestFactory.class).build();
-
-		RequestCallback requestCallback = t.httpEntityCallback(request, responseType);
-		ResponseExtractor<ResponseEntity<T>> responseExtractor = t.responseEntityExtractor(responseType);
-
-		return t.execute(url, httpMethod, requestCallback, responseExtractor, uriVariables);
 	}
 
 }
