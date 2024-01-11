@@ -29,7 +29,7 @@ public class ProductService implements IProductService {
 				.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductResponse.class, productId)
 				.getBody();
 
-		return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
+        return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
 	}
 
 	@Override
@@ -55,7 +55,6 @@ public class ProductService implements IProductService {
 		fakeStoreProductRequest.setDescription(product.getDescription());
 		fakeStoreProductRequest.setCategory(product.getCategory());
 		fakeStoreProductRequest.setImage(product.getImage());
-		fakeStoreProductRequest.setRating(product.getRating());
 
 		FakeStoreProductResponse fakeStoreProductResponse = HttpUtil
 				.requestForEntity(restTemplate, HttpMethod.PATCH, "https://fakestoreapi.com/products/{id}",

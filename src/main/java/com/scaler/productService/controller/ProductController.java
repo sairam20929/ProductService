@@ -29,101 +29,103 @@ import com.scaler.productService.service.IProductService;
 @RequestMapping("/products")
 public class ProductController {
 
-	/** The product service. */
-	private IProductService productService;
+    /**
+     * The product service.
+     */
+    private IProductService productService;
 
-	/**
-	 * Instantiates a new product controller.
-	 *
-	 * @param productService the product service
-	 */
-	public ProductController(IProductService productService) {
-		this.productService = productService;
-	}
+    /**
+     * Instantiates a new product controller.
+     *
+     * @param productService the product service
+     */
+    public ProductController(IProductService productService) {
+        this.productService = productService;
+    }
 
-	/**
-	 * Gets the product by id.
-	 *
-	 * @param productId the product id
-	 * @return the product by id
-	 */
-	@GetMapping("/{productId}")
-	public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable("productId") Long productId) {
+    /**
+     * Gets the product by id.
+     *
+     * @param productId the product id
+     * @return the product by id
+     */
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable("productId") Long productId) {
 
-		try {
-			Product productById = productService.getProductById(productId);
+        try {
+            Product productById = productService.getProductById(productId);
 
-			if (Objects.isNull(productById)) {
-				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-			}
+            if (Objects.isNull(productById)) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
 
-			MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-			headers.add("class-name", "integrating APIS");
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            headers.add("class-name", "integrating APIS");
 
-			ProductResponseDTO dto = ProductMapper.getProductResponseDTOFromProduct(productById);
+            ProductResponseDTO dto = ProductMapper.getProductResponseDTOFromProduct(productById);
 
-			return new ResponseEntity<>(dto, headers, HttpStatus.OK);
+            return new ResponseEntity<>(dto, headers, HttpStatus.OK);
 
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	/**
-	 * Gets the all products.
-	 *
-	 * @return the all products
-	 */
-	@GetMapping("/")
-	public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+    /**
+     * Gets the all products.
+     *
+     * @return the all products
+     */
+    @GetMapping("/")
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
 
-		List<Product> products = productService.getAllProducts();
+        List<Product> products = productService.getAllProducts();
 
-		List<ProductResponseDTO> productResponseDTOListFromProducts = ProductMapper
-				.getProductResponseDTOListFromProducts(products);
+        List<ProductResponseDTO> productResponseDTOListFromProducts = ProductMapper
+                .getProductResponseDTOListFromProducts(products);
 
-		return new ResponseEntity<>(productResponseDTOListFromProducts, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(productResponseDTOListFromProducts, HttpStatus.OK);
+    }
 
-	/**
-	 * Patch product.
-	 *
-	 * @param productId the product id
-	 * @param dto       the dto
-	 * @return the http entity
-	 * @throws Exception
-	 */
-	@PatchMapping("/{productId}")
-	public HttpEntity<ProductResponseDTO> patchProduct(@PathVariable("productId") Long productId,
-			@RequestBody ProductRequestDTO productRequestDTO) throws Exception {
+    /**
+     * Patch product.
+     *
+     * @param productId         the product id
+     * @param productRequestDTO the dto
+     * @return the http entity
+     * @throws Exception
+     */
+    @PatchMapping("/{productId}")
+    public HttpEntity<ProductResponseDTO> patchProduct(@PathVariable("productId") Long productId,
+                                                       @RequestBody ProductRequestDTO productRequestDTO) throws Exception {
 
-		Product product;
+        Product product;
 
-		try {
-			product = productService.patchProduct(productId,
-					ProductMapper.getProductFromProductRequestDTO(productRequestDTO));
-			ProductResponseDTO productResponseDTOFromProduct = ProductMapper.getProductResponseDTOFromProduct(product);
+        try {
+            product = productService.patchProduct(productId,
+                    ProductMapper.getProductFromProductRequestDTO(productRequestDTO));
+            ProductResponseDTO productResponseDTOFromProduct = ProductMapper.getProductResponseDTOFromProduct(product);
 
-			return new ResponseEntity<>(productResponseDTOFromProduct, HttpStatus.OK);
+            return new ResponseEntity<>(productResponseDTOFromProduct, HttpStatus.OK);
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 
-			e.printStackTrace();
-			throw e;
-		}
+            e.printStackTrace();
+            throw e;
+        }
 
-	}
+    }
 
-	/**
-	 * Creates the product.
-	 *
-	 * @param dto the dto
-	 * @return the string
-	 */
-	@PostMapping("/")
-	public String createProduct(@RequestBody ProductRequestDTO dto) {
+    /**
+     * Creates the product.
+     *
+     * @param dto the dto
+     * @return the string
+     */
+    @PostMapping("/")
+    public String createProduct(@RequestBody ProductRequestDTO dto) {
 
-		return "product created.. + " + dto.getTitle() + " " + dto.getCategory();
-	}
+        return "product created.. + " + dto.getTitle() + " " + dto.getCategory();
+    }
 
 }

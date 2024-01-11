@@ -27,7 +27,6 @@ public class ProductMapper {
 		product.setDescription(fakeStoreProductResponse.getDescription());
 		product.setCategory(fakeStoreProductResponse.getCategory());
 		product.setImage(fakeStoreProductResponse.getImage());
-		product.setRating(fakeStoreProductResponse.getRating());
 
 		return product;
 	}
@@ -62,7 +61,6 @@ public class ProductMapper {
 		product.setDescription(productRequestDTO.getDescription());
 		product.setCategory(productRequestDTO.getCategory());
 		product.setImage(productRequestDTO.getImage());
-		product.setRating(productRequestDTO.getRating());
 
 		return product;
 	}
@@ -81,7 +79,6 @@ public class ProductMapper {
 		productResponseDTO.setDescription(product.getDescription());
 		productResponseDTO.setCategory(product.getCategory());
 		productResponseDTO.setImage(product.getImage());
-		productResponseDTO.setRating(product.getRating());
 
 		return productResponseDTO;
 	}
