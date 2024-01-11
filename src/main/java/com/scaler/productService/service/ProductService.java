@@ -53,7 +53,7 @@ public class ProductService implements IProductService {
 		fakeStoreProductRequest.setTitle(product.getTitle());
 		fakeStoreProductRequest.setPrice(product.getPrice());
 		fakeStoreProductRequest.setDescription(product.getDescription());
-		fakeStoreProductRequest.setCategory(product.getCategory());
+//		fakeStoreProductRequest.setCategory(product.getCategory());
 		fakeStoreProductRequest.setImage(product.getImage());
 
 		FakeStoreProductResponse fakeStoreProductResponse = HttpUtil
