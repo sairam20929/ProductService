@@ -13,11 +13,22 @@ import com.scaler.productService.mapper.ProductMapper;
 import com.scaler.productService.model.Product;
 import com.scaler.productService.utility.HttpUtil;
 
+/**
+ * The type Product service.
+ */
 @Service
 public class ProductService implements IProductService {
 
-	RestTemplateBuilder restTemplate;
+	/**
+	 * The Rest template.
+	 */
+	private RestTemplateBuilder restTemplate;
 
+	/**
+	 * Instantiates a new Product service.
+	 *
+	 * @param restTemplate the rest template
+	 */
 	public ProductService(RestTemplateBuilder restTemplate) {
 		this.restTemplate = restTemplate;
 	}
