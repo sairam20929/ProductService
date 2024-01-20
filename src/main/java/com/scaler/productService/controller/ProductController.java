@@ -3,6 +3,7 @@ package com.scaler.productService.controller;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,14 @@ public class ProductController {
     /**
      * The product service.
      */
-    private IProductService productService;
+    private final IProductService productService;
 
     /**
      * Instantiates a new product controller.
      *
      * @param productService the product service
      */
-    public ProductController(IProductService productService) {
+    public ProductController(@Qualifier("selfProductService") IProductService productService) {
         this.productService = productService;
     }
 
@@ -93,25 +94,20 @@ public class ProductController {
      * @param productId         the product id
      * @param productRequestDTO the dto
      * @return the http entity
-     * @throws Exception
      */
     @PatchMapping("/{productId}")
     public HttpEntity<ProductResponseDTO> patchProduct(@PathVariable("productId") Long productId,
                                                        @RequestBody ProductRequestDTO productRequestDTO) throws Exception {
 
-        Product product;
-
         try {
-            product = productService.patchProduct(productId,
+            Product product = productService.patchProduct(productId,
                     ProductMapper.getProductFromProductRequestDTO(productRequestDTO));
             ProductResponseDTO productResponseDTOFromProduct = ProductMapper.getProductResponseDTOFromProduct(product);
 
             return new ResponseEntity<>(productResponseDTOFromProduct, HttpStatus.OK);
 
         } catch (Exception e) {
-
-            e.printStackTrace();
-            throw e;
+            throw new Exception(e);
         }
 
     }

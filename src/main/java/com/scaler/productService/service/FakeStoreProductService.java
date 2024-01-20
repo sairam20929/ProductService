@@ -17,7 +17,7 @@ import com.scaler.productService.utility.HttpUtil;
  * The type Product service.
  */
 @Service
-public class ProductService implements IProductService {
+public class FakeStoreProductService implements IProductService {
 
 	/**
 	 * The Rest template.
@@ -29,7 +29,7 @@ public class ProductService implements IProductService {
 	 *
 	 * @param restTemplate the rest template
 	 */
-	public ProductService(RestTemplateBuilder restTemplate) {
+	public FakeStoreProductService(RestTemplateBuilder restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
