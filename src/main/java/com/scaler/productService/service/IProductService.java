@@ -12,4 +12,6 @@ public interface IProductService {
 
 	Product patchProduct(Long productId, Product dto) throws Exception;
 
+	Product postProduct(Product product) throws Exception;
+
 }

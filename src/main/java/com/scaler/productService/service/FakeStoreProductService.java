@@ -19,61 +19,70 @@ import com.scaler.productService.utility.HttpUtil;
 @Service
 public class FakeStoreProductService implements IProductService {
 
-	/**
-	 * The Rest template.
-	 */
-	private RestTemplateBuilder restTemplate;
+    /**
+     * The Rest template.
+     */
+    private final RestTemplateBuilder restTemplate;
 
-	/**
-	 * Instantiates a new Product service.
-	 *
-	 * @param restTemplate the rest template
-	 */
-	public FakeStoreProductService(RestTemplateBuilder restTemplate) {
-		this.restTemplate = restTemplate;
-	}
+    /**
+     * Instantiates a new Product service.
+     *
+     * @param restTemplate the rest template
+     */
+    public FakeStoreProductService(RestTemplateBuilder restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
-	@Override
-	public Product getProductById(Long productId) {
+    @Override
+    public Product getProductById(Long productId) {
 
-		FakeStoreProductResponse fakeStoreProductResponse = restTemplate.build()
-				.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductResponse.class, productId)
-				.getBody();
+        FakeStoreProductResponse fakeStoreProductResponse = restTemplate.build()
+                .getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductResponse.class, productId)
+                .getBody();
 
+        assert fakeStoreProductResponse != null;
         return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
-	}
+    }
 
-	@Override
-	public List<Product> getAllProducts() {
+    @Override
+    public List<Product> getAllProducts() {
 
-		FakeStoreProductResponse[] fakeStoreProductResponses = restTemplate.build()
-				.getForEntity("https://fakestoreapi.com/products", FakeStoreProductResponse[].class).getBody();
+        FakeStoreProductResponse[] fakeStoreProductResponses = restTemplate.build()
+                .getForEntity("https://fakestoreapi.com/products", FakeStoreProductResponse[].class).getBody();
 
-		return ProductMapper.getProductListFromFakeStoreList(fakeStoreProductResponses);
-	}
+        assert fakeStoreProductResponses != null;
+        return ProductMapper.getProductListFromFakeStoreList(fakeStoreProductResponses);
+    }
 
-	@Override
-	public Product patchProduct(Long productId, Product product) throws Exception {
-		
-		Product existingProduct = getProductById(productId);
+    @Override
+    public Product patchProduct(Long productId, Product product) throws Exception {
+
+        Product existingProduct = getProductById(productId);
         if (Objects.isNull(existingProduct)) {
             throw new Exception("Product does not exist");
         }
 
-		FakeStoreProductRequest fakeStoreProductRequest = new FakeStoreProductRequest();
-		fakeStoreProductRequest.setTitle(product.getTitle());
-		fakeStoreProductRequest.setPrice(product.getPrice());
-		fakeStoreProductRequest.setDescription(product.getDescription());
+        FakeStoreProductRequest fakeStoreProductRequest = new FakeStoreProductRequest();
+        fakeStoreProductRequest.setTitle(product.getTitle());
+        fakeStoreProductRequest.setPrice(product.getPrice());
+        fakeStoreProductRequest.setDescription(product.getDescription());
 //		fakeStoreProductRequest.setCategory(product.getCategory());
-		fakeStoreProductRequest.setImage(product.getImage());
+        fakeStoreProductRequest.setImage(product.getImage());
 
-		FakeStoreProductResponse fakeStoreProductResponse = HttpUtil
-				.requestForEntity(restTemplate, HttpMethod.PATCH, "https://fakestoreapi.com/products/{id}",
-						fakeStoreProductRequest, FakeStoreProductResponse.class, productId)
-				.getBody();
+        FakeStoreProductResponse fakeStoreProductResponse = HttpUtil
+                .requestForEntity(restTemplate, HttpMethod.PATCH, "https://fakestoreapi.com/products/{id}",
+                        fakeStoreProductRequest, FakeStoreProductResponse.class, productId)
+                .getBody();
 
-		return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
+        assert fakeStoreProductResponse != null;
+        return ProductMapper.getProductFromFakeStoreProduct(fakeStoreProductResponse);
 
-	}
+    }
+
+    @Override
+    public Product postProduct(Product product) {
+//		need to implement...
+        return null;
+    }
 
 }

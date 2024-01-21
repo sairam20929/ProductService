@@ -41,4 +41,10 @@ public class SelfProductService implements IProductService {
 
         return repo.save(product);
     }
+
+    @Override
+    public Product postProduct(Product product) {
+
+        return repo.save(product);
+    }
 }
