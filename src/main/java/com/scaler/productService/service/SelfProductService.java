@@ -8,17 +8,22 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class SelfProductService implements IProductService{
+public class SelfProductService implements IProductService {
 
     private final ProductRepository repo;
 
     public SelfProductService(ProductRepository repo) {
         this.repo = repo;
     }
-    @Override
-    public Product getProductById(Long productId) {
 
-        return repo.findByProductId(productId);
+    @Override
+    public Product getProductById(Long productId) throws Exception {
+
+        if (repo.findById(productId).isEmpty()) {
+            throw new Exception("Product does not exist");
+        }
+
+        return repo.findById(productId).get();
     }
 
     @Override

@@ -82,10 +82,10 @@ public class ProductController {
 
         List<Product> products = productService.getAllProducts();
 
-        List<ProductResponseDTO> productResponseDTOListFromProducts = ProductMapper
+        List<ProductResponseDTO> productResponseDTOList = ProductMapper
                 .getProductResponseDTOListFromProducts(products);
 
-        return new ResponseEntity<>(productResponseDTOListFromProducts, HttpStatus.OK);
+        return new ResponseEntity<>(productResponseDTOList, HttpStatus.OK);
     }
 
     /**

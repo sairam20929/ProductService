@@ -6,7 +6,7 @@ import com.scaler.productService.model.Product;
 
 public interface IProductService {
 	
-	Product getProductById(Long productId);
+	Product getProductById(Long productId) throws Exception;
 
     List<Product> getAllProducts();
 
