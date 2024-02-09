@@ -89,7 +89,7 @@ class ProductControllerTest {
         Product product = new Product();
         ProductRequestDTO productRequestDTO = new ProductRequestDTO();
 
-        when(productService.patchProduct(1L, product)).thenReturn(product);
+        when(productService.patchProduct(1L, new Product())).thenReturn(product);
 
 //        Act
         ResponseEntity<ProductResponseDTO> response = productController.patchProduct(1L, productRequestDTO);
@@ -97,6 +97,19 @@ class ProductControllerTest {
 //        Assert
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    void patchProductThrowsException() throws Exception {
+
+//        Arrange
+        ProductRequestDTO productRequestDTO = new ProductRequestDTO();
+
+        when(productService.patchProduct(1L, new Product())).thenThrow(new Exception("Test exception"));
+
+//        Act and Assert
+        assertThrows(Exception.class, () -> productController.patchProduct(1L, productRequestDTO));
 
     }
 
