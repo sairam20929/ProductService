@@ -1,5 +1,6 @@
 package com.scaler.productService.controller;
 
+import com.scaler.productService.dto.ProductRequestDTO;
 import com.scaler.productService.dto.ProductResponseDTO;
 import com.scaler.productService.model.Product;
 import com.scaler.productService.service.SelfProductService;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +45,7 @@ class ProductControllerTest {
 //        Assert
         assertNotNull(byId);
         assertEquals("Product 1", Objects.requireNonNull(byId.getBody()).getTitle());
+        assertEquals(HttpStatus.OK, byId.getStatusCode());
 
     }
 
@@ -60,13 +64,56 @@ class ProductControllerTest {
 
     @Test
     void getAllProducts() {
+
+//        Arrange
+        List<Product> products = new ArrayList<>();
+        products.add(new Product());
+        products.add(new Product());
+        products.add(new Product());
+
+        when(productService.getAllProducts()).thenReturn(products);
+
+//        Act
+        ResponseEntity<List<ProductResponseDTO>> allProducts = productController.getAllProducts();
+
+//        Assert
+        assertNotNull(allProducts);
+        assertEquals(3, Objects.requireNonNull(allProducts.getBody()).size());
+        assertEquals(HttpStatus.OK, allProducts.getStatusCode());
     }
 
     @Test
-    void patchProduct() {
+    void patchProduct() throws Exception {
+
+//        Arrange
+        Product product = new Product();
+        ProductRequestDTO productRequestDTO = new ProductRequestDTO();
+
+        when(productService.patchProduct(1L, product)).thenReturn(product);
+
+//        Act
+        ResponseEntity<ProductResponseDTO> response = productController.patchProduct(1L, productRequestDTO);
+
+//        Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
     }
 
     @Test
-    void createProduct() {
+    void createProduct() throws Exception {
+
+//        Arrange
+        Product product = new Product();
+        ProductRequestDTO productRequestDTO = new ProductRequestDTO();
+
+        when(productService.postProduct(product)).thenReturn(product);
+
+//        Act
+        ResponseEntity<ProductResponseDTO> response = productController.createProduct(productRequestDTO);
+
+//        Assert
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
