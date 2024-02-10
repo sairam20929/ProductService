@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service("selfProductService")
 public class SelfProductService implements IProductService {
 
     private final ProductRepository repo;
@@ -35,11 +35,26 @@ public class SelfProductService implements IProductService {
     public Product patchProduct(Long productId, Product product) throws Exception {
 
         Product existingProduct = getProductById(productId);
+
         if (Objects.isNull(existingProduct)) {
             throw new Exception("Product does not exist");
+
+        }else{
+            if (Objects.nonNull(product.getTitle())) {
+                existingProduct.setTitle(product.getTitle());
+            }
+            if (Objects.nonNull(product.getPrice())) {
+                existingProduct.setPrice(product.getPrice());
+            }
+            if (Objects.nonNull(product.getDescription())) {
+                existingProduct.setDescription(product.getDescription());
+            }
+            if (Objects.nonNull(product.getImage())) {
+                existingProduct.setImage(product.getImage());
+            }
         }
 
-        return repo.save(product);
+        return repo.save(existingProduct);
     }
 
     @Override

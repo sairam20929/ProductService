@@ -56,6 +56,7 @@ public class ProductMapper {
 	public static Product getProductFromProductRequestDTO(ProductRequestDTO productRequestDTO) {
 
 		Product product = new Product();
+
 		product.setTitle(productRequestDTO.getTitle());
 		product.setPrice(productRequestDTO.getPrice());
 		product.setDescription(productRequestDTO.getDescription());
@@ -74,6 +75,8 @@ public class ProductMapper {
 	public static ProductResponseDTO getProductResponseDTOFromProduct(Product product) {
 
 		ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+
+		productResponseDTO.setId(product.getId());
 		productResponseDTO.setTitle(product.getTitle());
 		productResponseDTO.setPrice(product.getPrice());
 		productResponseDTO.setDescription(product.getDescription());
