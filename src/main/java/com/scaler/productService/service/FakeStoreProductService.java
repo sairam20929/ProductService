@@ -85,4 +85,9 @@ public class FakeStoreProductService implements IProductService {
         return null;
     }
 
+    @Override
+    public void deleteProduct(Long productId) throws Exception {
+
+    }
+
 }

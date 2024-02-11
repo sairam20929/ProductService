@@ -86,6 +86,7 @@ public class ProductController {
      * @param productId         the product id
      * @param productRequestDTO the dto
      * @return the http entity
+     * @throws Exception the exception
      */
     @PatchMapping("/{productId}")
     public ResponseEntity<ProductResponseDTO> patchProduct(@PathVariable("productId") Long productId,
@@ -109,6 +110,7 @@ public class ProductController {
      *
      * @param productRequestDTO the dto
      * @return the string
+     * @throws Exception the exception
      */
     @PostMapping("/")
     public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequestDTO) throws Exception {
@@ -119,6 +121,31 @@ public class ProductController {
             ProductResponseDTO productResponseDTO = ProductMapper.getProductResponseDTOFromProduct(product);
 
             return new ResponseEntity<>(productResponseDTO, HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
+    }
+
+    /**
+     * Delete product response entity.
+     *
+     * @param productId the product id
+     * @return the response entity
+     * @throws Exception the exception
+     */
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable("productId") Long productId) throws Exception {
+
+        if (Objects.isNull(productId))
+            return new ResponseEntity<>("Product Id is required", HttpStatus.BAD_REQUEST);
+
+        if (Objects.isNull(productService.getProductById(productId)))
+            return new ResponseEntity<>("Product does not exist", HttpStatus.NOT_FOUND);
+
+        try {
+            productService.deleteProduct(productId);
+            return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
 
         } catch (Exception e) {
             throw new Exception(e);

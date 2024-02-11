@@ -62,4 +62,13 @@ public class SelfProductService implements IProductService {
 
         return repo.save(product);
     }
+
+    @Override
+    public void deleteProduct(Long productId) throws Exception {
+
+        if (!repo.existsById(productId)) {
+            throw new Exception("Product does not exist");
+        }
+        repo.deleteById(productId);
+    }
 }

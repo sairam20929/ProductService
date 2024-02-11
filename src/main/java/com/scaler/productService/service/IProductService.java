@@ -14,4 +14,5 @@ public interface IProductService {
 
 	Product postProduct(Product product) throws Exception;
 
+	void deleteProduct(Long productId) throws Exception;
 }
